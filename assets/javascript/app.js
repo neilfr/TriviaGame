@@ -30,6 +30,36 @@ var trivia =[
     }
 ];
 
+function startScreen(){
+    $('.startScreen').show();
+    $('.questionScreen').hide();
+    $('.answerScreen').hide();
+    $('.statScreen').hide();
+}
+
+function questionScreen(){
+    $('.startScreen').hide();
+    $('.questionScreen').show();
+    $('.answerScreen').hide();
+    $('.statScreen').hide();
+}
+
+function answerScreen(){
+    $('.startScreen').hide();
+    $('.questionScreen').hide();
+    $('.answerScreen').hide();
+    $('.statScreen').show();
+}
+
+function statScreen(){
+    $('.startScreen').hide();
+    $('.questionScreen').hide();
+    $('.answerScreen').hide();
+    $('.statScreen').show();
+    $('#correctAnswers').html("Correct Answers: "+rights);
+    $('#incorrectAnswers').html("Incorrect Answers: "+wrongs);
+}
+
 // display (ask) a trivia question
 function askQuestion(number){
     $('#question').html(trivia[number].question);
@@ -50,25 +80,37 @@ function checkAnswer(number){
     }
 }
 
-// start game when start button pressed
+// begin the game on the startScreen
+startScreen();
+
+// switch to the question screen and ask a question when startButton is clicked 
 $('#startButton').on('click', function(){
-    console.log("make me invisible");
-    $('#startButton').hide();
-    gameState = "questions";
-    questionLoop();
+    questionScreen();
+    askQuestion(questionNumber);
 });
 
-// proceed to the next question
-function questionLoop(){
-    
-    askQuestion(questionNumber);
-    $('.answer').on('click', function(){
-        console.log("question number: "+questionNumber);
-        console.log("you clicked answer:");
-        console.log(event.target.id);
-        checkAnswer(questionNumber);
-        questionNumber++;
-    });
-}
+// check answer and ask next question until the end of the question bank
+$('.answer').on('click', function(){
+    console.log("question number: "+questionNumber);
+    console.log("trivia.length is: "+trivia.length);
+    console.log("you clicked answer: "+event.target.id);
+    checkAnswer(questionNumber);
+    if (++questionNumber<trivia.length){
+        askQuestion(questionNumber);
+    }else{
+        gameState="done";
+        statScreen();
+    }
+});
+
+$('#startOverButton').on('click', function(){
+    questionNumber=0;
+    rights=0;
+    wrongs=0;
+    questionScreen();
+});
+
+
+
 
 
