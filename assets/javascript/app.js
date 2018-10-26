@@ -2,7 +2,7 @@ var rights=0;
 var wrongs=0;
 var unanswered=0;
 var gameState = "start";
-var questionCounter=0;
+var questionNumber=0;
 
 // load question bank
 var trivia =[
@@ -12,25 +12,43 @@ var trivia =[
         optionB:"45",
         optionC:"51",
         optionD:"75",
-        answer:"C",
+        answer:"A",
     },{
         question:"how old are you?",
         optionA:"25",
         optionB:"45",
         optionC:"51",
         optionD:"75",
-        answer:"A",
-    }];
+        answer:"B",
+    },{
+        question:"how old is Joe?",
+        optionA:"25",
+        optionB:"45",
+        optionC:"51",
+        optionD:"75",
+        answer:"C",
+    }
+];
 
 // display (ask) a trivia question
-function askQuestion(triviaQuestion){
-    $('#question').html(triviaQuestion.question);
-    $('#A').html(triviaQuestion.optionA);
-    $('#B').html(triviaQuestion.optionB);
-    $('#C').html(triviaQuestion.optionC);
-    $('#D').html(triviaQuestion.optionD);
+function askQuestion(number){
+    $('#question').html(trivia[number].question);
+    $('#A').html(trivia[number].optionA);
+    $('#B').html(trivia[number].optionB);
+    $('#C').html(trivia[number].optionC);
+    $('#D').html(trivia[number].optionD);
 }
 
+// checks if answer is right or wrong and increments appropriate counter
+function checkAnswer(number){
+    if(event.target.id===trivia[number].answer){
+        rights++;
+        console.log("you were right: "+rights);
+    }else{
+        wrongs++;
+        console.log("you were wrong: "+wrongs);
+    }
+}
 
 // start game when start button pressed
 $('#startButton').on('click', function(){
@@ -40,20 +58,16 @@ $('#startButton').on('click', function(){
     questionLoop();
 });
 
+// proceed to the next question
 function questionLoop(){
-    // ask a question
-    askQuestion(trivia[questionCounter]);
-
+    
+    askQuestion(questionNumber);
     $('.answer').on('click', function(){
+        console.log("question number: "+questionNumber);
         console.log("you clicked answer:");
         console.log(event.target.id);
-        if(event.target.id===trivia[questionCounter].answer){
-            rights++;
-            console.log("you were right: "+rights);
-        }else{
-            wrongs++;
-            console.log("you were wrong: "+wrongs);
-        }
+        checkAnswer(questionNumber);
+        questionNumber++;
     });
 }
 
