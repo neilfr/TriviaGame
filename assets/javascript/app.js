@@ -3,6 +3,9 @@ var rights=0;
 var wrongs=0;
 var unanswered=0;
 var questionNumber=0;
+var timer=5;
+var intervalId;
+var timerOn=false;
 
 // load question bank
 var trivia =[
@@ -30,6 +33,33 @@ var trivia =[
     }
 ];
 
+function setTimer(){
+    intervalId=setInterval(answerCountdown,1000);
+    timer=5;
+    timerOn=true;
+}
+
+function answerCountdown(){
+    timer--;
+    $('#answerTimer').html("Time left: "+timer);
+    if(timer===0){
+        stopTimer();
+    }
+}
+
+function stopTimer(){
+    clearInterval(intervalId);
+    timerOn=false;
+}
+
+function nextQuestion(){
+    if (++questionNumber<trivia.length){  // we are not at the end of the question bank
+        questionScreen(questionNumber);
+    }else{ //we are at the end of the question bank
+        statScreen();
+    }
+}
+
 // setup the start screen
 function startScreen(){
     $('.startScreen').show();
@@ -40,7 +70,7 @@ function startScreen(){
 
 // setup the question screen
 function questionScreen(number){
-    $('#correctAnswer').html("");
+    $('#correctAnswer').html(""); //make sure old posted answers are cleared
     $('.startScreen').hide();
     $('.questionScreen').show();
     $('.answerScreen').hide();
@@ -54,6 +84,9 @@ function answerScreen(){
     $('.questionScreen').hide();
     $('.answerScreen').show();
     $('.statScreen').hide();
+    setTimer();
+    setTimeout(nextQuestion,timer*1000);
+
 }
 
 // setup the end of game statistics screen
@@ -75,10 +108,6 @@ function askQuestion(number){
     $('#D').html(trivia[number].optionD);
 }
 
-function helloWorld(){
-    $('h1').html("hello world");
-}
-
 // check if the answer is right or wrong, setup to display the appropriate response and increment the appropriate counter
 function checkAnswer(number){
     if(event.target.id===trivia[number].answer){
@@ -89,11 +118,9 @@ function checkAnswer(number){
         $('#answerStatus').html("Unfortunately, you are incorrect...");
         switch (trivia[number].answer){
             case 'A':
-                console.log("i got in!");
                 $('#correctAnswer').html("The correct answer is..."+trivia[number].optionA);
                 break;
             case 'B':
-                console.log("got here too");
                 $('#correctAnswer').html("The correct answer is..."+trivia[number].optionB);
                 break;
             case 'C':
@@ -106,12 +133,6 @@ function checkAnswer(number){
                 console.log("something went wrong");
         }
     }
-    answerScreen();
-    if (++questionNumber<trivia.length){
-        setTimeout(function(){questionScreen(questionNumber)},5000);
-    }else{
-        setTimeout(statScreen,5000);
-    }
 }
 
 // begin the game on the startScreen
@@ -122,12 +143,13 @@ $('#startButton').on('click', function(){
     questionScreen(questionNumber);
 });
 
-// check the if the selected answer is correct and then ask the next question... until the end of the question bank
+// check the if the selected answer is correct, display the answer, then go to the next question or the end of the game
 $('.answer').on('click', function(){
     checkAnswer(questionNumber);
+    answerScreen();
 });
 
-// start the game over again by going to the questionScreen
+// start the game over again - reset counters and go to the questionScreen
 $('#startOverButton').on('click', function(){
     rights=0;
     wrongs=0;
