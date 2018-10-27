@@ -1,8 +1,8 @@
 
-var rights;
-var wrongs;
-var unanswered;
-var questionNumber;
+var rights=0;
+var wrongs=0;
+var unanswered=0;
+var questionNumber=0;
 
 // load question bank
 var trivia =[
@@ -39,15 +39,13 @@ function startScreen(){
 }
 
 // setup the question screen
-function questionScreen(){
-    questionNumber=0;
-    rights=0;
-    wrongs=0;
-    unanswered=0;
+function questionScreen(number){
+    $('#correctAnswer').html("");
     $('.startScreen').hide();
     $('.questionScreen').show();
     $('.answerScreen').hide();
     $('.statScreen').hide();
+    askQuestion(number);
 }
 
 // setup the answer screen
@@ -77,12 +75,15 @@ function askQuestion(number){
     $('#D').html(trivia[number].optionD);
 }
 
-// check if the answer is right or wrong and increment the appropriate counter
+function helloWorld(){
+    $('h1').html("hello world");
+}
+
+// check if the answer is right or wrong, setup to display the appropriate response and increment the appropriate counter
 function checkAnswer(number){
     if(event.target.id===trivia[number].answer){
         rights++;
         $('#answerStatus').html("You are correct!");
-        console.log("you were right: "+rights);
     }else{
         wrongs++;
         $('#answerStatus').html("Unfortunately, you are incorrect...");
@@ -104,10 +105,13 @@ function checkAnswer(number){
             default:
                 console.log("something went wrong");
         }
-
-        console.log("you were wrong: "+wrongs);
     }
     answerScreen();
+    if (++questionNumber<trivia.length){
+        setTimeout(function(){questionScreen(questionNumber)},5000);
+    }else{
+        setTimeout(statScreen,5000);
+    }
 }
 
 // begin the game on the startScreen
@@ -115,23 +119,21 @@ startScreen();
 
 // switch to the question screen and ask a question when startButton is clicked 
 $('#startButton').on('click', function(){
-    questionScreen();
-    askQuestion(questionNumber);
+    questionScreen(questionNumber);
 });
 
 // check the if the selected answer is correct and then ask the next question... until the end of the question bank
 $('.answer').on('click', function(){
     checkAnswer(questionNumber);
-    if (++questionNumber<trivia.length){
-        askQuestion(questionNumber);
-    }else{
-        statScreen();
-    }
 });
 
 // start the game over again by going to the questionScreen
 $('#startOverButton').on('click', function(){
-    questionScreen();
+    rights=0;
+    wrongs=0;
+    unanswered=0;
+    questionNumber=0;
+    questionScreen(questionNumber);
 });
 
 
