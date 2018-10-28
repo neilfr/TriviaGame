@@ -7,7 +7,7 @@ var myInterval;
 // load question bank.  Questions sourced from https://pleated-jeans.com and modified for this form factor.
 var trivia =[
     {
-        question:"Justin Bieber is thrown horizontally at 10.0m/s from the top of a cliff 1000m high.  What is Justin’s velocity at the time of impact?",
+        question:"Justin Bieber is thrown horizontally at 10.0m/s from the back of a plane travelling at 700km/h at 20,000ft.  What is Justin’s velocity at the time of impact?",
         optionA:"Pi * radius ^ 2",
         optionB:"Somewhere between 200 to 500km/h depending on the angle of his body position",
         optionC:"What?!?",
@@ -203,7 +203,7 @@ function clearCountdown(){
 
 // start a countdown for the question screen; if the countdown expires, procees to the answer screen
 function questionCountdown(){
-    var timer=10;
+    var timer=20;
         myInterval = setInterval(function(){
         $('#countdown').html("You have "+timer+" seconds to answer!");
         if(timer===0){

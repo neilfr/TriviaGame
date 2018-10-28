@@ -6,12 +6,12 @@ body{
 
 h1{
     font-size:3em;
+    line-height: 3.5em;
 }
 
 #question,#answerStatus{
-    padding-top:1em;
-    font-size: 2em;
-    line-height: 1.75em;
+    font-size: 1.5em;
+    line-height: 2em;
     text-align: center;
     font-style: italic;
 
@@ -44,12 +44,25 @@ answerContainer{
     padding:1em;
 }
 
-.answer,#correctAnswer, #correctAnswers,#incorrectAnswers,#unanswered{
+.answer,#correctAnswer{
     line-height:2em;
     font-size:1.25em;
     font-weight: bold;
-    border-style: 1px solid purple;
+    border: 1px solid purple;
 }
+#correctAnswers,#incorrectAnswers,#unanswered{
+    line-height:2em;
+    font-size:1.25em;
+    font-weight: bold;
+}
+#A{
+    border-top: 2px solid purple;
+}
+
+#D{
+    border-bottom: 2px solid purple;
+}
+
 .answer:hover{
     background-color:purple;
 }
@@ -63,3 +76,16 @@ answerContainer{
     font-size:2em;
 }
 
+@media screen and (max-width:740px){
+    h1{
+        font-size:2em;
+        line-height:2em;
+    }
+}
+
+@media screen and (max-width:600px){
+    .answer,#correctAnswer,#question,#answerStatus{
+        line-height:1em;
+        font-size:1em;
+    }
+}
