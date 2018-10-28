@@ -1,38 +1,69 @@
-
 var rights;
 var wrongs;
 var unanswered;
 var questionNumber;
 var myInterval;
 
-
-
-// load question bank
+// load question bank.  Questions sourced from https://pleated-jeans.com and modified for this form factor.
 var trivia =[
     {
-        question:"how old am I?",
-        optionA:"25",
-        optionB:"45",
-        optionC:"51",
-        optionD:"75",
-        answer:"A",
-    },{
-        question:"how old are you?",
-        optionA:"25",
-        optionB:"45",
-        optionC:"51",
-        optionD:"75",
+        question:"Justin Bieber is thrown horizontally at 10.0m/s from the top of a cliff 1000m high.  What is Justin’s velocity at the time of impact?",
+        optionA:"Pi * radius ^ 2",
+        optionB:"Somewhere between 200 to 500km/h depending on the angle of his body position",
+        optionC:"What?!?",
+        optionD:"You shouldn’t throw people from a plane!",
         answer:"B",
     },{
-        question:"how old is Joe?",
-        optionA:"25",
-        optionB:"45",
-        optionC:"51",
-        optionD:"75",
+        question:"If your car begins to hydroplane you should immediately:",
+        optionA:"Remove your foot from the accelerator and let the car decelerate",
+        optionB:"Pump the brakes repeatedly",
+        optionC:"Slam your foot firmly on the brakes",
+        optionD:"Do nothing and allow your car to turn into the plane it has always dreamed of being",
+        answer:"A",
+    },{
+        question:"Rick Astley is never gonna:",
+        optionA:"Give you up",
+        optionB:"Let you down",
+        optionC:"Make you cry, hurt you",
+        optionD:"All of the above",
+        answer:"D",
+    },{
+        question:"The Titanic was powered by:",
+        optionA:"Thousands of hamsters running inside little wheels",
+        optionB:"The rowing of the third class passengers",
+        optionC:"16 giant steam boilers",
+        optionD:"The crew members 'hocking lugies' off the stern all at once",
+        answer:"C",
+    },{
+        question:"The eerie sense of having previously experienced a situation is known as:",
+        optionA:"The serial position effect",
+        optionB:"Mood-congruent memory",
+        optionC:"Source amnesia",
+        optionD:"Deja vu",
+        answer:"D",
+    },{
+        question:"The eerie sense of having previously experienced a situation is known as:",
+        optionA:"The serial position effect",
+        optionB:"Mood-congruent memory",
+        optionC:"Source amnesia",
+        optionD:"Deja vu",
+        answer:"D",
+    },{
+        question:"Stand up and yell your favourite color, the street you live on, and your lucky number!",
+        optionA:"Mission accomplished!",
+        optionB:"I'm too shy",
+        optionC:"I'm not even reading these questions, I'm just picking at random",
+        optionD:"What are you crazy?!?",
+        answer:"A",
+    },{
+        question:"This author is tired of making questions... so if you made it this far, choose 'C' to get this one correct! Peace out...",
+        optionA:"No, not this one",
+        optionB:"Keep going...",
+        optionC:"Yup, right here",
+        optionD:"Too far! Too far! Backup!",
         answer:"C",
     }
 ];
-
 
 // show the start screen
 function showStartScreen(){
@@ -80,7 +111,7 @@ function askQuestion(number){
     $('#D').html(trivia[number].optionD);
 }
 
-
+// ask the next question unless you are at the end of the question bank
 function nextQuestion(){
     questionNumber++;
     console.log("question number is: "+questionNumber);
@@ -88,30 +119,28 @@ function nextQuestion(){
     console.log("trivia.length -1 is: "+temp);
     if (questionNumber<(trivia.length)){  // we are not at the end of the question bank
         askQuestion(questionNumber);
+        questionCountdown();
         showQuestionScreen();
-        questionCountdown(); // new
     }else{ //we are at the end of the question bank
         console.log("we should be showing the stat screen");
         showStatScreen();
     }
 }
 
-
-
+// show the correct answer for the current question
 function showCorrectAnswer(){
-
     switch (trivia[questionNumber].answer){
         case 'A':
-            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionA);
+            $('#correctAnswer').html("The correct answer is...<br>"+trivia[questionNumber].optionA);
             break;
         case 'B':
-            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionB);
+            $('#correctAnswer').html("The correct answer is...<br>"+trivia[questionNumber].optionB);
             break;
         case 'C':
-            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionC);
+            $('#correctAnswer').html("The correct answer is...<br>"+trivia[questionNumber].optionC);
         break;
         case 'D':
-            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionD);
+            $('#correctAnswer').html("The correct answer is...<br>"+trivia[questionNumber].optionD);
         break;
         default:
             console.log("something went wrong");
@@ -125,7 +154,7 @@ function checkAnswer(number){
         $('#answerStatus').html("You are correct!");
     }else{
         wrongs++;
-        $('#answerStatus').html("Unfortunately, you are incorrect...");
+        $('#answerStatus').html("Unfortunately, you are incorrect...<br>");
         showCorrectAnswer();
     }
 }
@@ -140,22 +169,23 @@ $('#startButton').on('click', function(){
     unanswered=0;
     questionNumber=0;
     askQuestion(questionNumber);
-    showQuestionScreen();
     questionCountdown();
+    showQuestionScreen();
 });
 
 // check if the selected answer is correct, display the answer, then go to the next question or the end of the game
 $('.answer').on('click', function(){
     clearCountdown();
     checkAnswer(questionNumber);
-    showAnswerScreen();
     answerCountdown();
+    showAnswerScreen();
 });
 
+// start a countdown for the answer screen; if the countdown expires, proceed to the next question
 function answerCountdown(){
-    let timer=5;
+    var timer=3;
     myInterval = setInterval(function(){
-        $('#countdown').html("Countdown is at:"+timer);
+     //   $('#countdown').html("Next question coming in... "+timer+"seconds!");
         if(timer===0){
             clearCountdown();
             nextQuestion();
@@ -165,32 +195,24 @@ function answerCountdown(){
     },1000)
 }
 
+// clear the current setinterval
 function clearCountdown(){
     clearInterval(myInterval);
-    $('#countdown').html("Countdown is at: cleared");
+    $('#countdown').html(" ");
 }
 
-
-
+// start a countdown for the question screen; if the countdown expires, procees to the answer screen
 function questionCountdown(){
-    let timer=5;
-    
-    myInterval = setInterval(function(){
-        $('#countdown').html("Countdown is at:"+timer);
+    var timer=10;
+        myInterval = setInterval(function(){
+        $('#countdown').html("You have "+timer+" seconds to answer!");
         if(timer===0){
             clearCountdown();
             showCorrectAnswer();
-            showAnswerScreen();
             answerCountdown();
+            showAnswerScreen();
         }else{
             timer--;
         }
     },1000)
 }
-
-
-
-
-
-
-

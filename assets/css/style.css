@@ -8,6 +8,15 @@ h1{
     font-size:3em;
 }
 
+#question,#answerStatus{
+    padding-top:1em;
+    font-size: 2em;
+    line-height: 1.75em;
+    text-align: center;
+    font-style: italic;
+
+}
+
 #backgroundPane{
     width:80%;
     height:700px;
@@ -31,6 +40,26 @@ h1{
     opacity:0.5;
 }
 
+answerContainer{
+    padding:1em;
+}
+
+.answer,#correctAnswer, #correctAnswers,#incorrectAnswers,#unanswered{
+    line-height:2em;
+    font-size:1.25em;
+    font-weight: bold;
+    border-style: 1px solid purple;
+}
 .answer:hover{
     background-color:purple;
 }
+
+#countdown{
+    padding-top:1em;
+}
+
+#playAgain{
+    line-height:3em;
+    font-size:2em;
+}
+
