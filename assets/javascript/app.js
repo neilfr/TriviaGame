@@ -1,11 +1,11 @@
 
-var rights=0;
-var wrongs=0;
-var unanswered=0;
-var questionNumber=0;
-var timer=5;
-var intervalId;
-var timerOn=false;
+var rights;
+var wrongs;
+var unanswered;
+var questionNumber;
+var myInterval;
+
+
 
 // load question bank
 var trivia =[
@@ -33,70 +33,42 @@ var trivia =[
     }
 ];
 
-function setTimer(){
-    intervalId=setInterval(answerCountdown,1000);
-    timer=5;
-    timerOn=true;
-}
 
-function answerCountdown(){
-    timer--;
-    $('#answerTimer').html("Time left: "+timer);
-    if(timer===0){
-        stopTimer();
-    }
-}
-
-function stopTimer(){
-    clearInterval(intervalId);
-    timerOn=false;
-}
-
-function nextQuestion(){
-    if (++questionNumber<trivia.length){  // we are not at the end of the question bank
-        questionScreen(questionNumber);
-    }else{ //we are at the end of the question bank
-        statScreen();
-    }
-}
-
-// setup the start screen
-function startScreen(){
-    $('.startScreen').show();
+// show the start screen
+function showStartScreen(){
     $('.questionScreen').hide();
     $('.answerScreen').hide();
     $('.statScreen').hide();
+    $('.startScreen').show();
 }
 
-// setup the question screen
-function questionScreen(number){
+// show the question screen
+function showQuestionScreen(){
     $('#correctAnswer').html(""); //make sure old posted answers are cleared
     $('.startScreen').hide();
-    $('.questionScreen').show();
     $('.answerScreen').hide();
     $('.statScreen').hide();
-    askQuestion(number);
+    $('.questionScreen').show();
 }
 
-// setup the answer screen
-function answerScreen(){
+// show the answer screen
+function showAnswerScreen(){
     $('.startScreen').hide();
     $('.questionScreen').hide();
-    $('.answerScreen').show();
     $('.statScreen').hide();
-    setTimer();
-    setTimeout(nextQuestion,timer*1000);
-
+    $('.answerScreen').show();
 }
 
 // setup the end of game statistics screen
-function statScreen(){
+function showStatScreen(){
     $('.startScreen').hide();
     $('.questionScreen').hide();
     $('.answerScreen').hide();
     $('.statScreen').show();
     $('#correctAnswers').html("Correct Answers: "+rights);
     $('#incorrectAnswers').html("Incorrect Answers: "+wrongs);
+    var unanswered = trivia.length-(rights+wrongs);
+    $('#unanswered').html("Unanswered: "+unanswered);
 }
 
 // display (ask) a trivia question
@@ -108,6 +80,44 @@ function askQuestion(number){
     $('#D').html(trivia[number].optionD);
 }
 
+
+function nextQuestion(){
+    questionNumber++;
+    console.log("question number is: "+questionNumber);
+    var temp=trivia.length-1;
+    console.log("trivia.length -1 is: "+temp);
+    if (questionNumber<(trivia.length)){  // we are not at the end of the question bank
+        askQuestion(questionNumber);
+        showQuestionScreen();
+        questionCountdown(); // new
+    }else{ //we are at the end of the question bank
+        console.log("we should be showing the stat screen");
+        showStatScreen();
+    }
+}
+
+
+
+function showCorrectAnswer(){
+
+    switch (trivia[questionNumber].answer){
+        case 'A':
+            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionA);
+            break;
+        case 'B':
+            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionB);
+            break;
+        case 'C':
+            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionC);
+        break;
+        case 'D':
+            $('#correctAnswer').html("The correct answer is..."+trivia[questionNumber].optionD);
+        break;
+        default:
+            console.log("something went wrong");
+    }
+}
+
 // check if the answer is right or wrong, setup to display the appropriate response and increment the appropriate counter
 function checkAnswer(number){
     if(event.target.id===trivia[number].answer){
@@ -116,47 +126,69 @@ function checkAnswer(number){
     }else{
         wrongs++;
         $('#answerStatus').html("Unfortunately, you are incorrect...");
-        switch (trivia[number].answer){
-            case 'A':
-                $('#correctAnswer').html("The correct answer is..."+trivia[number].optionA);
-                break;
-            case 'B':
-                $('#correctAnswer').html("The correct answer is..."+trivia[number].optionB);
-                break;
-            case 'C':
-                $('#correctAnswer').html("The correct answer is..."+trivia[number].optionC);
-            break;
-            case 'D':
-                $('#correctAnswer').html("The correct answer is..."+trivia[number].optionD);
-            break;
-            default:
-                console.log("something went wrong");
-        }
+        showCorrectAnswer();
     }
 }
 
 // begin the game on the startScreen
-startScreen();
+showStartScreen();
 
-// switch to the question screen and ask a question when startButton is clicked 
+// reset counters, setup the question, show the screen and start the countdown
 $('#startButton').on('click', function(){
-    questionScreen(questionNumber);
-});
-
-// check the if the selected answer is correct, display the answer, then go to the next question or the end of the game
-$('.answer').on('click', function(){
-    checkAnswer(questionNumber);
-    answerScreen();
-});
-
-// start the game over again - reset counters and go to the questionScreen
-$('#startOverButton').on('click', function(){
     rights=0;
     wrongs=0;
     unanswered=0;
     questionNumber=0;
-    questionScreen(questionNumber);
+    askQuestion(questionNumber);
+    showQuestionScreen();
+    questionCountdown();
 });
+
+// check if the selected answer is correct, display the answer, then go to the next question or the end of the game
+$('.answer').on('click', function(){
+    clearCountdown();
+    checkAnswer(questionNumber);
+    showAnswerScreen();
+    answerCountdown();
+});
+
+function answerCountdown(){
+    let timer=5;
+    myInterval = setInterval(function(){
+        $('#countdown').html("Countdown is at:"+timer);
+        if(timer===0){
+            clearCountdown();
+            nextQuestion();
+        }else{
+            timer--;
+        }
+    },1000)
+}
+
+function clearCountdown(){
+    clearInterval(myInterval);
+    $('#countdown').html("Countdown is at: cleared");
+}
+
+
+
+function questionCountdown(){
+    let timer=5;
+    
+    myInterval = setInterval(function(){
+        $('#countdown').html("Countdown is at:"+timer);
+        if(timer===0){
+            clearCountdown();
+            showCorrectAnswer();
+            showAnswerScreen();
+            answerCountdown();
+        }else{
+            timer--;
+        }
+    },1000)
+}
+
+
 
 
 

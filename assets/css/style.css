@@ -16,8 +16,8 @@ h1{
     background-color:orange;
 }
 
-#startButton,#startOverButton{
-    width:200px;
+#startButton{
+    width:300px;
     height:3em;
     margin:auto;
     background-color: blue;
@@ -27,7 +27,7 @@ h1{
     margin-top:50px;
 }
 
-#startButton:hover,#startOverButton:hover{
+#startButton:hover{
     opacity:0.5;
 }
 
