@@ -207,6 +207,7 @@ function questionCountdown(){
         myInterval = setInterval(function(){
         $('#countdown').html("You have "+timer+" seconds to answer!");
         if(timer===0){
+            $('#answerStatus').html("");
             clearCountdown();
             showCorrectAnswer();
             answerCountdown();
